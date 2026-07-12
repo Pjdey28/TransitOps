@@ -41,7 +41,33 @@ const tripSchema = new mongoose.Schema({
   fuelConsumed: Number
 }, { timestamps: true });
 
+const maintenanceSchema = new mongoose.Schema({
+  vehicle: { type: mongoose.Schema.Types.ObjectId, ref: "Vehicle" },
+  title: String,
+  cost: Number,
+  status: { type: String, enum: ["Active", "Closed"], default: "Active" },
+  date: Date
+}, { timestamps: true });
+
+const fuelSchema = new mongoose.Schema({
+  vehicle: { type: mongoose.Schema.Types.ObjectId, ref: "Vehicle" },
+  liters: Number,
+  cost: Number,
+  distance: Number,
+  date: Date
+}, { timestamps: true });
+
+const expenseSchema = new mongoose.Schema({
+  vehicle: { type: mongoose.Schema.Types.ObjectId, ref: "Vehicle" },
+  type: String,
+  amount: Number,
+  date: Date
+}, { timestamps: true });
+
 export const User = mongoose.model("User", userSchema);
 export const Vehicle = mongoose.model("Vehicle", vehicleSchema);
 export const Driver = mongoose.model("Driver", driverSchema);
 export const Trip = mongoose.model("Trip", tripSchema);
+export const Maintenance = mongoose.model("Maintenance", maintenanceSchema);
+export const Fuel = mongoose.model("Fuel", fuelSchema);
+export const Expense = mongoose.model("Expense", expenseSchema);

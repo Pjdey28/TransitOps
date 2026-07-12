@@ -1,4 +1,4 @@
-import Vehicle from "../models/index.js";
+import {Vehicle} from "../models/index.js";
 
 export const getVehicles = async (req, res) => {
   try {

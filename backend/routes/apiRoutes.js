@@ -1,5 +1,5 @@
 import express from "express";
-import { protect, authorize } from "../middleware/authMiddleware.js";
+import { protect, authorize } from "../middleware/middleware.js";
 import { getTrips, createTrip, completeTrip,cancelTrip,dispatchTrip } from "../controllers/tripController.js";
 import { getDashboardStats, getReports } from "../controllers/analyticsController.js";
 import { getMaintenance, createMaintenance, closeMaintenance, getFuelLogs, createFuelLog, getExpenses, createExpense } from "../controllers/operationsController.js";

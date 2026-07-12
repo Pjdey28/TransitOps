@@ -12,7 +12,12 @@ import Expenses from "./pages/Expenses";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 export default function App() {
-  const [auth, setAuth] = useState(() => JSON.parse(localStorage.getItem("user")));
+
+  const [auth, setAuth] = useState(() => {
+    const user = localStorage.getItem("user");
+    return user && user !== "undefined" ? JSON.parse(user) : null;
+  });
+  
   const [page, setPage] = useState("Dashboard");
   const [toast, setToast] = useState("");
 
@@ -43,7 +48,7 @@ export default function App() {
             {page === "Fuel" && <FuelLogs notify={notify} auth={auth} />}
             {page === "Expenses" && <Expenses notify={notify} auth={auth} />}
             {page === "Reports" && <Reports notify={notify} auth={auth} />}
-            {page === "Settings" && <Settings auth="{auth}" notify="{notify}"/>}
+            {page === "Settings" && <Settings auth={auth} notify={notify}/>}
           </motion.section>
         </AnimatePresence>
       </main>

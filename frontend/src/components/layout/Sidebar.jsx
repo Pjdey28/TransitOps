@@ -7,26 +7,29 @@ import {
   Fuel,
   LayoutDashboard,
   LogOut,
-  SettingsIcon,
   Truck,
   User,
   Wrench,
-  SettingsIcon
+  Settings
 } from "lucide-react";
 
-const navItems = [
-  ["Dashboard", LayoutDashboard],
-  ["Vehicles", Truck],
-  ["Drivers", User],
-  ["Trips", ClipboardList],
-  ["Maintenance", Wrench],
-  ["Fuel", Fuel],
-  ["Expenses", FileText],
-  ["Reports", Download],
-  ["Settings", SettingsIcon]
-];
-
 export default function Sidebar({ auth, page, setPage, logout }) {
+  // Define which roles are allowed to see which tabs
+  const navItems = [
+    { label: "Dashboard", Icon: LayoutDashboard, roles: ["Fleet Manager", "Driver", "Safety Officer", "Financial Analyst"] },
+    { label: "Vehicles", Icon: Truck, roles: ["Fleet Manager"] },
+    { label: "Drivers", Icon: User, roles: ["Fleet Manager", "Safety Officer"] },
+    { label: "Trips", Icon: ClipboardList, roles: ["Fleet Manager", "Driver"] },
+    { label: "Maintenance", Icon: Wrench, roles: ["Fleet Manager"] },
+    { label: "Fuel", Icon: Fuel, roles: ["Fleet Manager", "Driver", "Financial Analyst"] },
+    { label: "Expenses", Icon: FileText, roles: ["Fleet Manager", "Financial Analyst"] },
+    { label: "Reports", Icon: Download, roles: ["Fleet Manager", "Financial Analyst"] },
+    { label: "Settings", Icon: Settings, roles: ["Fleet Manager"] }
+  ];
+
+  // Filter the navigation items based on the current user's role
+  const authorizedNav = navItems.filter(item => item.roles.includes(auth.role));
+
   return (
     <aside>
       <div className="brand">
@@ -38,7 +41,7 @@ export default function Sidebar({ auth, page, setPage, logout }) {
       </div>
 
       <nav>
-        {navItems.map(([label, Icon]) => (
+        {authorizedNav.map(({ label, Icon }) => (
           <button 
             key={label} 
             onClick={() => setPage(label)} 
