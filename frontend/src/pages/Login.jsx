@@ -126,6 +126,15 @@ export default function Login({ setAuth, notify }) {
         <button className="authSubmit">
           {isSignup ? "Create account" : "Login"}
         </button>
+        <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ margin: '0 0 8px 0', fontWeight: 600 }}>Demo Accounts password is: password</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'flex-start', background: 'rgba(148, 163, 184, 0.05)', padding: '12px', borderRadius: '8px', textAlign: 'left' }}>
+            <span><b>Fleet Manager:</b> fleet@transitops.com</span>
+            <span><b>Driver:</b> driver@transitops.com</span>
+            <span><b>Safety Officer:</b> safety@transitops.com</span>
+            <span><b>Financial Analyst:</b> finance@transitops.com</span>
+          </div>
+        </div>
       </motion.form>
     </div>
   );
