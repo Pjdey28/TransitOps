@@ -44,7 +44,7 @@ export default function Login({ setAuth, notify }) {
     try {
       const path = isSignup ? "/auth/register" : "/auth/login";
       const payload = isSignup
-        ? form
+        ? { ...form, role: "Driver" }
         : { email: form.email, password: form.password };
 
       const data = await request(path, {
@@ -120,18 +120,6 @@ export default function Login({ setAuth, notify }) {
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
-
-        {isSignup && (
-          <select
-            value={form.role}
-            onChange={(e) => setForm({ ...form, role: e.target.value })}
-          >
-            <option>Fleet Manager</option>
-            <option>Driver</option>
-            <option>Safety Officer</option>
-            <option>Financial Analyst</option>
-          </select>
-        )}
 
         {error && <div className="authError">{error}</div>}
 

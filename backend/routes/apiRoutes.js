@@ -55,5 +55,6 @@ router.get("/expenses", protect, getExpenses);
 router.post("/expenses", protect, authorize("Fleet Manager", "Financial Analyst"), createExpense);
 
 router.get("/users", protect, authorize("Fleet Manager"), getUsers);
+router.post("/users", protect, authorize("Fleet Manager"), createUser);
 router.patch("/users/:id/role", protect, authorize("Fleet Manager"), updateUserRole);
 export default router;
