@@ -17,7 +17,7 @@ export default function Drivers({ notify, auth }) {
     try {
       await request("/drivers", { method: "POST", body: JSON.stringify(form) });
       await load();
-      setForm({ licenseCategory: "LMV", status: "Available" }); // Reset form
+      setForm({ licenseCategory: "LMV", status: "Available" }); 
       notify("Driver added");
     } catch (err) {
       notify(err.message);
