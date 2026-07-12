@@ -39,7 +39,7 @@ router.get("/dashboard", protect, getDashboardStats);
 router.get("/reports", protect, getReports);
 
 // Vehicles
-router.get("/vehicles", protect, getVehicles);
+router.get("/vehicles", protect, authorize("Fleet Manager", "Financial Analyst", "Driver"), getVehicles);
 router.post("/vehicles", protect, authorize("Fleet Manager"), createVehicle);
 
 router.put("/vehicles/:id", protect, authorize("Fleet Manager"), async (req, res) => {
@@ -57,7 +57,7 @@ router.delete("/vehicles/:id", protect, authorize("Fleet Manager"), async (req, 
 });
 
 // Drivers
-router.get("/drivers", protect, async (req, res) => {
+router.get("/drivers", protect, authorize("Fleet Manager", "Safety Officer"),async (req, res) => {
   res.json(await Driver.find().sort({ createdAt: -1 }));
 });
 
@@ -81,19 +81,19 @@ router.delete("/drivers/:id", protect, authorize("Fleet Manager", "Safety Office
 });
 
 // Trips
-router.get("/trips", protect, getTrips);
+router.get("/trips", protect, authorize("Fleet Manager", "Driver", "Safety Officer"), getTrips);
 router.post("/trips", protect, authorize("Fleet Manager", "Driver"), createTrip);
 router.patch("/trips/:id/complete", protect, authorize("Fleet Manager", "Driver"), completeTrip);
 router.patch("/trips/:id/cancel", protect, authorize("Fleet Manager", "Driver"), cancelTrip);
 router.patch("/trips/:id/dispatch", protect, authorize("Fleet Manager", "Driver"), dispatchTrip);
 
-router.delete("/trips/:id", protect, authorize("Fleet Manager"), async (req, res) => {
+router.delete("/trips/:id", protect, authorize("Fleet Manager", "Driver"), async (req, res) => {
   await Trip.findByIdAndDelete(req.params.id);
   res.json({ message: "Trip deleted" });
 });
 
 // Maintenance
-router.get("/maintenance", protect, getMaintenance);
+router.get("/maintenance", protect, authorize("Fleet Manager"), getMaintenance);
 router.post("/maintenance", protect, authorize("Fleet Manager"), createMaintenance);
 router.patch("/maintenance/:id/close", protect, authorize("Fleet Manager"), closeMaintenance);
 
@@ -112,10 +112,10 @@ router.delete("/maintenance/:id", protect, authorize("Fleet Manager"), async (re
 });
 
 // Fuel Logs
-router.get("/fuel", protect, getFuelLogs);
-router.post("/fuel", protect, authorize("Fleet Manager", "Financial Analyst"), createFuelLog);
+router.get("/fuel", protect,authorize("Financial Analyst"), getFuelLogs);
+router.post("/fuel", protect, authorize("Financial Analyst"), createFuelLog);
 
-router.put("/fuel/:id", protect, authorize("Fleet Manager", "Financial Analyst"), async (req, res) => {
+router.put("/fuel/:id", protect, authorize("Financial Analyst"), async (req, res) => {
   const updated = await Fuel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
@@ -124,16 +124,16 @@ router.put("/fuel/:id", protect, authorize("Fleet Manager", "Financial Analyst")
   res.json(updated);
 });
 
-router.delete("/fuel/:id", protect, authorize("Fleet Manager", "Financial Analyst"), async (req, res) => {
+router.delete("/fuel/:id", protect, authorize("Financial Analyst"), async (req, res) => {
   await Fuel.findByIdAndDelete(req.params.id);
   res.json({ message: "Fuel log deleted" });
 });
 
 // Expenses
-router.get("/expenses", protect, getExpenses);
-router.post("/expenses", protect, authorize("Fleet Manager", "Financial Analyst"), createExpense);
+router.get("/expenses", protect,authorize("Financial Analyst"), getExpenses);
+router.post("/expenses", protect, authorize("Financial Analyst"), createExpense);
 
-router.put("/expenses/:id", protect, authorize("Fleet Manager", "Financial Analyst"), async (req, res) => {
+router.put("/expenses/:id", protect, authorize("Financial Analyst"), async (req, res) => {
   const updated = await Expense.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
@@ -142,7 +142,7 @@ router.put("/expenses/:id", protect, authorize("Fleet Manager", "Financial Analy
   res.json(updated);
 });
 
-router.delete("/expenses/:id", protect, authorize("Fleet Manager", "Financial Analyst"), async (req, res) => {
+router.delete("/expenses/:id", protect, authorize("Financial Analyst"), async (req, res) => {
   await Expense.findByIdAndDelete(req.params.id);
   res.json({ message: "Expense deleted" });
 });
