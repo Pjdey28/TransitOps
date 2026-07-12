@@ -707,3 +707,14 @@ select option {
 .chartTooltip strong {
   font-size: 15px;
 }
+
+.authError {
+  padding: 11px 13px;
+  border-radius: 13px;
+  color: #fecaca;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.32);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
