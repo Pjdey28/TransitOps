@@ -50,6 +50,21 @@ export default function Trips({ notify, auth }) {
     notify("Trip completed");
   };
 
+  const cancel = async (id) => {
+    if(!window.confirm("Are you sure you want to cancel this trip?")) return;
+    try {
+      await request(`/trips/${id}/cancel`, { method: "PATCH" });
+      await load();
+      notify("Trip cancelled");
+    } catch (err) {
+      notify(err.message);
+    }
+  };
+
+  // Filter dropdowns to ONLY show available resources per business rules
+  const availableVehicles = vehicles.filter(v => v.status === "Available");
+  const availableDrivers = drivers.filter(d => d.status === "Available");
+
   return (
     <Card title="Trip Management">
       {canEdit && (
@@ -58,15 +73,17 @@ export default function Trips({ notify, auth }) {
           <input placeholder="Destination" required onChange={(e) => setForm({...form, destination: e.target.value})} />
           <select required onChange={(e) => setForm({...form, vehicle: e.target.value})}>
             <option value="">Select Vehicle</option>
-            {vehicles.map(v => <option key={v._id} value={v._id}>{v.name} ({v.status})</option>)}
+            {availableVehicles.map(v => <option key={v._id} value={v._id}>{v.name} ({v.maxLoad}kg)</option>)}
           </select>
           <select required onChange={(e) => setForm({...form, driver: e.target.value})}>
             <option value="">Select Driver</option>
-            {drivers.map(d => <option key={d._id} value={d._id}>{d.name} ({d.status})</option>)}
+            {availableDrivers.map(d => <option key={d._id} value={d._id}>{d.name}</option>)}
           </select>
           <input placeholder="Cargo Weight" type="number" required onChange={(e) => setForm({...form, cargoWeight: e.target.value})} />
+          {/* Added missing planned distance input */}
+          <input placeholder="Planned Distance (km)" type="number" required onChange={(e) => setForm({...form, plannedDistance: e.target.value})} />
           
-          <div className="actions" style={{ marginBottom: 0, marginTop: "10px" }}>
+          <div className="actions" style={{ marginBottom: 0, marginTop: "10px", gridColumn: "span 2" }}>
             <button type="button" onClick={(e) => submit(e, true)}>Save Draft</button>
             <button type="button" onClick={(e) => submit(e, false)}>Dispatch Now</button>
           </div>
@@ -83,9 +100,14 @@ export default function Trips({ notify, auth }) {
             <span>{t.vehicle?.name}</span>
             <span>{t.driver?.name}</span>
             <span>{t.status}</span>
-            <span>
+            <span style={{display: 'flex', gap: '8px'}}>
               {t.status === "Draft" && canEdit && <button onClick={() => dispatchDraft(t._id)}>Dispatch</button>}
-              {t.status === "Dispatched" && canEdit && <button onClick={() => complete(t._id)}>Complete</button>}
+              {t.status === "Dispatched" && canEdit && (
+                <>
+                  <button onClick={() => complete(t._id)}>Complete</button>
+                  <button onClick={() => cancel(t._id)} style={{background: '#ef4444'}}>Cancel</button>
+                </>
+              )}
             </span>
           </div>
         ))}
