@@ -10,7 +10,8 @@ import {
   Truck,
   User,
   Wrench,
-  Settings
+  Settings,
+  LineChart,
 } from "lucide-react";
 
 export default function Sidebar({ auth, page, setPage, logout }) {
@@ -23,6 +24,7 @@ export default function Sidebar({ auth, page, setPage, logout }) {
     { label: "Maintenance", Icon: Wrench, roles: ["Fleet Manager"] },
     { label: "Fuel", Icon: Fuel, roles: ["Fleet Manager", "Driver", "Financial Analyst"] },
     { label: "Expenses", Icon: FileText, roles: ["Fleet Manager", "Financial Analyst"] },
+    { label: "Analytics", Icon: LineChart, roles: ["Fleet Manager", "Financial Analyst"] },
     { label: "Reports", Icon: Download, roles: ["Fleet Manager", "Financial Analyst"] },
     { label: "Settings", Icon: Settings, roles: ["Fleet Manager"] }
   ];

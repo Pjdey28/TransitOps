@@ -61,9 +61,12 @@ export default function Trips({ notify, auth }) {
     }
   };
 
-  // Filter dropdowns to ONLY show available resources per business rules
   const availableVehicles = vehicles.filter(v => v.status === "Available");
   const availableDrivers = drivers.filter(d => d.status === "Available");
+  const selectedVehicleData = availableVehicles.find(v => v._id === form.vehicle);
+  const cargoWeightNum = Number(form.cargoWeight) || 0;
+  const capacityExceeded = selectedVehicleData && cargoWeightNum > selectedVehicleData.maxLoad;
+  const excessWeight = capacityExceeded ? cargoWeightNum - selectedVehicleData.maxLoad : 0;
 
   return (
     <Card title="Trip Management">
@@ -79,18 +82,27 @@ export default function Trips({ notify, auth }) {
             <option value="">Select Driver</option>
             {availableDrivers.map(d => <option key={d._id} value={d._id}>{d.name}</option>)}
           </select>
-          <input placeholder="Cargo Weight" type="number" required onChange={(e) => setForm({...form, cargoWeight: e.target.value})} />
-          {/* Added missing planned distance input */}
+          <input placeholder="Cargo Weight (kg)" type="number" required onChange={(e) => setForm({...form, cargoWeight: e.target.value})} />
           <input placeholder="Planned Distance (km)" type="number" required onChange={(e) => setForm({...form, plannedDistance: e.target.value})} />
-          
-          <div className="actions" style={{ marginBottom: 0, marginTop: "10px", gridColumn: "span 2" }}>
-            <button type="button" onClick={(e) => submit(e, true)}>Save Draft</button>
-            <button type="button" onClick={(e) => submit(e, false)}>Dispatch Now</button>
+
+          {capacityExceeded && (
+            <div style={{ color: "#ef4444", border: "1px solid #ef4444", padding: "12px", borderRadius: "8px", marginTop: "10px", gridColumn: "span 4", background: "rgba(239, 68, 68, 0.05)" }}>
+              <p style={{ margin: 0, fontSize: "13px" }}>Vehicle Capacity: <strong>{selectedVehicleData.maxLoad} kg</strong></p>
+              <p style={{ margin: "4px 0", fontSize: "13px" }}>Cargo Weight: <strong>{cargoWeightNum} kg</strong></p>
+              <strong style={{ display: "block", marginTop: "8px", fontSize: "14px" }}>
+                ❌ Capacity exceeded by {excessWeight} kg — dispatch blocked
+              </strong>
+            </div>
+          )}
+
+          <div className="actions" style={{ marginBottom: 0, marginTop: "10px", gridColumn: "span 4" }}>
+            <button type="button" onClick={(e) => submit(e, true)} disabled={capacityExceeded} style={{ opacity: capacityExceeded ? 0.5 : 1, cursor: capacityExceeded ? "not-allowed" : "pointer" }}>Save Draft</button>
+            <button type="button" onClick={(e) => submit(e, false)} disabled={capacityExceeded} style={{ opacity: capacityExceeded ? 0.5 : 1, cursor: capacityExceeded ? "not-allowed" : "pointer" }}>Dispatch Now</button>
           </div>
         </form>
       )}
       
-      <div className="table">
+      <div className="table" style={{ marginTop: "24px" }}>
         <div className="row head">
           <span>Route</span><span>Vehicle</span><span>Driver</span><span>Status</span><span>Action</span>
         </div>

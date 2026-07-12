@@ -11,6 +11,7 @@ import FuelLogs from "./pages/FuelLogs";
 import Expenses from "./pages/Expenses";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
+import Analytics from "./pages/Analytics";
 export default function App() {
 
   const [auth, setAuth] = useState(() => {
@@ -47,6 +48,7 @@ export default function App() {
             {page === "Maintenance" && <Maintenance notify={notify} auth={auth} />}
             {page === "Fuel" && <FuelLogs notify={notify} auth={auth} />}
             {page === "Expenses" && <Expenses notify={notify} auth={auth} />}
+            {page === "Analytics" && <Analytics notify={notify} auth={auth} />}
             {page === "Reports" && <Reports notify={notify} auth={auth} />}
             {page === "Settings" && <Settings auth={auth} notify={notify}/>}
           </motion.section>
